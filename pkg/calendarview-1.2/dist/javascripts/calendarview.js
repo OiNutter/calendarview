@@ -1,22 +1,3 @@
-//
-// CalendarView (for Prototype)
-// calendarview.org
-//
-// Maintained by Justin Mecham <justin@aspect.net>
-//
-// Portions Copyright 2002-2005 Mihai Bazon
-//
-// This calendar is based very loosely on the Dynarch Calendar in that it was
-// used as a base, but completely gutted and more or less rewritten in place
-// to use the Prototype JavaScript library.
-//
-// As such, CalendarView is licensed under the terms of the GNU Lesser General
-// Public License (LGPL). More information on the Dynarch Calendar can be
-// found at:
-//
-//   www.dynarch.com/projects/calendar
-//
-
 var Calendar = Class.create()
 
 //------------------------------------------------------------------------------
@@ -80,9 +61,13 @@ Calendar.handleMouseDownEvent = function(event)
 // clean this up!
 Calendar.handleMouseUpEvent = function(event)
 {
-  var el        = Event.element(event)
-  var calendar  = el.calendar
-  var isNewDate = false
+  var el        = Event.element(event),
+  	  calendar  = el.calendar,
+  	  isNewDate = false,
+  	  isOtherMonth,
+  	  date,
+  	  year,
+  	  mon
 
   // If the element that was clicked on does not have an associated Calendar
   // object, return as we have nothing to do.
@@ -91,38 +76,43 @@ Calendar.handleMouseUpEvent = function(event)
   // Clicked on a day
   if (typeof el.navAction == 'undefined')
   {
-    if (calendar.currentDateElement) {
+	  
+    if (calendar.currentDateElement)
+    {
       Element.removeClassName(calendar.currentDateElement, 'selected')
       Element.addClassName(el, 'selected')
       calendar.shouldClose = (calendar.currentDateElement == el)
       if (!calendar.shouldClose) calendar.currentDateElement = el
     }
+    
     calendar.date.setDateOnly(el.date)
     isNewDate = true
     calendar.shouldClose = !el.hasClassName('otherDay')
-    var isOtherMonth     = !calendar.shouldClose
+    isOtherMonth         = !calendar.shouldClose
     if (isOtherMonth) calendar.update(calendar.date)
-  }
-
-  // Clicked on an action button
-  else
+  
+  }   
+  //Clicked on an action button
+  else  
   {
-    var date = new Date(calendar.date)
+    date = new Date(calendar.date)
 
     if (el.navAction == Calendar.NAV_TODAY)
       date.setDateOnly(new Date())
 
-    var year = date.getFullYear()
-    var mon = date.getMonth()
+    year = date.getFullYear()
+    mon = date.getMonth()
+    
     function setMonth(m) {
-      var day = date.getDate()
-      var max = date.getMonthDays(m)
+      var day = date.getDate(),
+          max = date.getMonthDays(m)
       if (day > max) date.setDate(max)
       date.setMonth(m)
     }
+    
     switch (el.navAction) {
 
-      // Previous Year
+    // Previous Year
       case Calendar.NAV_PREVIOUS_YEAR:
         if (year > calendar.minYear)
           date.setFullYear(year - 1)
@@ -296,8 +286,9 @@ Calendar.prototype = {
   // Initialize
   //----------------------------------------------------------------------------
 
-  initialize: function(parent)
+  initialize: function(parent,planner)
   {
+		
     if (parent)
       this.create($(parent))
     else
@@ -312,13 +303,14 @@ Calendar.prototype = {
 
   update: function(date)
   {
-    var calendar   = this
-    var today      = new Date()
-    var thisYear   = today.getFullYear()
-    var thisMonth  = today.getMonth()
-    var thisDay    = today.getDate()
-    var month      = date.getMonth();
-    var dayOfMonth = date.getDate();
+    var calendar   = this,
+    	today      = new Date(),
+    	thisYear   = today.getFullYear(),
+    	thisMonth  = today.getMonth(),
+    	thisDay    = today.getDate(),
+    	month      = date.getMonth(),
+    	dayOfMonth = date.getDate()
+    
 
     // Ensure date is within the defined range
     if (date.getFullYear() < this.minYear)
@@ -590,35 +582,42 @@ Calendar.prototype = {
 
 // global object that remembers the calendar
 window._popupCalendar = null
+;
+//=======================================
+// Planner Add On For CalendarView
+//
+// Allows events to be added to calendar 
+//======================================= 
+ 
 
+Calendar.Planner = Class.create();
 
+Calendar.Planner.Setup = function(events){
+	var planner = Calendar.Planner.new(),
+		i
+		
+	for(i = 0; i < events.length; i++)
+		planner.addEvent(events[i])
+		
+	return planner
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Calendar.Planner.prototype = {
+		initialize: function(){
+			this.events = {}
+		},
+		addEvent: function(event){
+			var date = new Date(event.date)
+			if(!this.events[date.print('%Y-%m-%d')])
+				this.events[date] = []
+			
+			this.events[date].push(event)
+		},
+		getEventsForDate: function(date){
+			return this.events[date] || []
+		}
+}
+;
 //==============================================================================
 //
 // Date Object Patches
@@ -837,3 +836,58 @@ Date.prototype.setFullYear = function(y) {
     this.setDate(28);
   this.__msh_oldSetFullYear(y);
 }
+;
+//
+// CalendarView (for Prototype)
+// calendarview.org
+//
+// Maintained by Justin Mecham <justin@aspect.net>
+//
+// Portions Copyright 2002-2005 Mihai Bazon
+//
+// This calendar is based very loosely on the Dynarch Calendar in that it was
+// used as a base, but completely gutted and more or less rewritten in place
+// to use the Prototype JavaScript library.
+//
+// As such, CalendarView is licensed under the terms of the GNU Lesser General
+// Public License (LGPL). More information on the Dynarch Calendar can be
+// found at:
+//
+//   www.dynarch.com/projects/calendar
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;

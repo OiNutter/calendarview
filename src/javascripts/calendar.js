@@ -288,7 +288,9 @@ Calendar.prototype = {
 
   initialize: function(parent,planner)
   {
-		
+	  if(planner)
+		this.planner = Calendar.Planner.Setup(planner);
+	  
     if (parent)
       this.create($(parent))
     else
@@ -309,7 +311,9 @@ Calendar.prototype = {
     	thisMonth  = today.getMonth(),
     	thisDay    = today.getDate(),
     	month      = date.getMonth(),
-    	dayOfMonth = date.getDate()
+    	dayOfMonth = date.getDate(),
+    	planner    = this.planner,
+    	wrapper
     
 
     // Ensure date is within the defined range
@@ -338,6 +342,17 @@ Calendar.prototype = {
             cell.className = ''
             cell.date = new Date(date)
             cell.update(day)
+            
+            //Add events
+            events = planner.getEventsForDate(date.print('%Y-%m-%d'))
+            
+            if(events){
+            	wrapper = new Element('span').addClassName('events-summary');
+            	cell.appendChild(wrapper)
+            	planner.render(wrapper,date)
+            }
+            	
+            
 
             // Account for days of the month other than the current month
             if (!isCurrentMonth)

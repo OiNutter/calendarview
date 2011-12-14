@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>CalendarView — JavaScript Calendar Widget</title>
-    <link rel="stylesheet" href="../stylesheets/calendarview.css">
+    <link rel="stylesheet" href="../src/stylesheets/calendarview.css">
     <style>
       body {
         font-family: Trebuchet MS;
@@ -31,9 +31,24 @@
         background-color: #cde;
         cursor: pointer;
       }
+      
+      div#eventCalendar div.calendar{
+      	max-width:700px;
+      }
+      
+      div#eventCalendar tr.days td{
+      	    text-align:left;
+      	    vertical-align:top;
+      	    padding:10px 10px;
+      	    width:100px;
+      	    height:100px;
+      	      	
+      }
     </style>
-    <script src="../javascripts/prototype.js"></script>
-    <script src="../javascripts/calendarview.js"></script>
+    <script src="../lib/prototype.js"></script>
+    <script src="../src/javascripts/calendar.js"></script>
+    <script src="../src/javascripts/planner.js"></script>
+    <script src="../src/javascripts/date.js"></script>
     <script>
       function setupCalendars() {
         // Embedded Calendar
@@ -51,7 +66,40 @@
             triggerElement: 'popupDateField'
           }
         )
+        
+        // Event Calendar
+        var events = [
+        				{
+        					date:'2011-12-18',
+        					event:"Birthday"
+        				},
+        				{
+        					date:'2011-12-18',
+        					event:'Party'
+        				},
+        				{
+        					date:'2011-12-25',
+        					event:'Christmas'
+        				},
+        				{
+        					date:'2012-01-01', 
+        					event:'New Years Day'
+        				},
+        				{
+        					date:'2012-01-25',
+        					event:'Burns Night'	
+        				}
+        			]
+        Calendar.setup(
+          {
+            dateField: 'eventDateField',
+            parentElement: 'eventCalendar',
+            planner: Calendar.Planner.setup(events)
+          }
+        )
       }
+     
+        
 
       Event.observe(window, 'load', function() { setupCalendars() })
     </script>
@@ -86,6 +134,22 @@
         </div>
       </div>
     </div>
-
+    <br style="clear:both"/>
+	<div style="width:100%; margin:20px auto;clear:both;">
+      <div style="height: 700px; background-color: #efefef; padding: 10px; -webkit-border-radius: 12px; -moz-border-radius: 12px; margin-right: 10px">
+        <h3 style="text-align: center; background-color: white; -webkit-border-radius: 10px; -moz-border-radius: 10px; margin-top: 0px; margin-bottom: 20px; padding: 8px">
+          Events Calendar
+        </h3>
+        <div id="eventExample" style="">
+          <div id="eventCalendar" style="margin-left: auto; margin-right: auto">
+          </div>
+          <br />
+          <div id="eventDateField" class="dateField">
+            Select Date
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
   </body>
 </html>

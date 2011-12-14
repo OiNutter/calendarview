@@ -80,3 +80,16 @@ div.calendar tr.days td.otherDay
 {
   color: #bbb;
 }
+
+div.calendar tr.days td .events-summary{
+	clear:both;
+	display:block;
+}
+
+div.calendar tr.days td .events-summary span{
+	display:block;
+	background:#999;	
+	padding:3px;
+	margin:2px;
+	color:#fff;
+}

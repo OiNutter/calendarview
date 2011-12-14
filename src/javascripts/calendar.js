@@ -208,11 +208,12 @@ Calendar.setup = function(params)
   param_default('parentElement', null)
   param_default('selectHandler',  null)
   param_default('closeHandler', null)
+  param_default('planner',null)
 
   // In-Page Calendar
   if (params.parentElement)
   {
-    var calendar = new Calendar(params.parentElement)
+    var calendar = new Calendar(params.parentElement,params.planner)
     calendar.setSelectHandler(params.selectHandler || Calendar.defaultSelectHandler)
     if (params.dateFormat)
       calendar.setDateFormat(params.dateFormat)
@@ -233,7 +234,7 @@ Calendar.setup = function(params)
   {
     var triggerElement = $(params.triggerElement || params.dateField)
     triggerElement.onclick = function() {
-      var calendar = new Calendar()
+      var calendar = new Calendar(false,params.planner)
       calendar.setSelectHandler(params.selectHandler || Calendar.defaultSelectHandler)
       calendar.setCloseHandler(params.closeHandler || Calendar.defaultCloseHandler)
       if (params.dateFormat)
@@ -289,7 +290,7 @@ Calendar.prototype = {
   initialize: function(parent,planner)
   {
 	  if(planner)
-		this.planner = Calendar.Planner.Setup(planner);
+		this.planner = planner;
 	  
     if (parent)
       this.create($(parent))
@@ -312,7 +313,7 @@ Calendar.prototype = {
     	thisDay    = today.getDate(),
     	month      = date.getMonth(),
     	dayOfMonth = date.getDate(),
-    	planner    = this.planner,
+    	planner    = this.planner || null,
     	wrapper
     
 
@@ -344,12 +345,14 @@ Calendar.prototype = {
             cell.update(day)
             
             //Add events
-            events = planner.getEventsForDate(date.print('%Y-%m-%d'))
-            
-            if(events){
-            	wrapper = new Element('span').addClassName('events-summary');
-            	cell.appendChild(wrapper)
-            	planner.render(wrapper,date)
+            if(planner){
+            	events = planner.getEventsForDate(date.print('%Y-%m-%d'))
+            	console.log(events)
+            	if(events.length>0){
+            		wrapper = new Element('span').addClassName('events-summary');
+            		cell.appendChild(wrapper)
+            		planner.render(wrapper,date)
+            	}
             }
             	
             

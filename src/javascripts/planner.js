@@ -7,13 +7,14 @@
 
 Calendar.Planner = Class.create();
 
-Calendar.Planner.Setup = function(events,options){
-	var planner = Calendar.Planner.new(options),
+Calendar.Planner.setup = function(events,options){
+	var planner = new Calendar.Planner(options),
 		i
 		
 	for(i = 0; i < events.length; i++)
 		planner.addEvent(events[i])
-		
+	
+	console.log(planner.events)
 	return planner
 }
 
@@ -22,33 +23,32 @@ Calendar.Planner.prototype = {
 			this.events = {}
 			this.options = Object.extend({
 				maxEvents:3,
-				labelFormat:'{{event}}',
-				countFormat:'{{count}} events'
-				}
+				labelFormat:'{event}',
+				countFormat:'{count} events'
 			},options);
 		},
 		addEvent: function(event){
 			var date = new Date(event.date)
 			if(!this.events[date.print('%Y-%m-%d')])
-				this.events[date] = []
+				this.events[date.print('%Y-%m-%d')] = []
 			
-			this.events[date].push(event)
+			this.events[date.print('%Y-%m-%d')].push(event)
 		},
 		getEventsForDate: function(date){
 			return this.events[date] || []
 		},
 		render: function(container,date,format){
-			format ||= "summary"
+			format = format || "summary"
 							
 			var label,
 				i;
-			
+			console.log(container)
 			if(this.getEventsForDate(date.print('%Y-%m-%d')).length>this.options.maxEvents){
-				label = new Element('span').update(this.parse(countFormat,{count:events.length}))
+				label = new Element('span').update(this.parse(this.options.countFormat,{count:events.length}))
 				container.appendChild(label)
 			} else {
 				for(i=0;i<events.length;i++){
-					label = new Element('span').update(this.parse(labelFormat,events[i]))
+					label = new Element('span').update(this.parse(this.options.labelFormat,events[i]))
 					container.appendChild(label)
 				}
 			}
@@ -56,8 +56,7 @@ Calendar.Planner.prototype = {
 		parse: function(string,replacements){
 			var key;
 			for(key in replacements)
-				string=string.replace(new RegExp('{'+key+'}','g'),replacement[key]);
+				string=string.replace(new RegExp('{'+key+'}','g'),replacements[key]);
 			return string;
 		}
 }
-

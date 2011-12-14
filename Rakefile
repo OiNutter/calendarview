@@ -124,7 +124,7 @@ end
 
 Rake::PackageTask.new('calendarview', CALENDARVIEW_VERSION) do |package|
   package.need_zip = true
-  package.package_dir = 'pkg'
+  package.package_dir = 'releases'
   package.package_files.include(
     'dist/javascripts/**',
     'dist/stylesheets/**',

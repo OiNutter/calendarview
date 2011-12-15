@@ -173,10 +173,10 @@ Calendar.defaultSelectHandler = function(calendar)
   if (!calendar.dateField) return false
 
   // Update dateField value
-  if (calendar.dateField.tagName == 'DIV')
-    Element.update(calendar.dateField, calendar.date.print(calendar.dateFormat))
-  else if (calendar.dateField.tagName == 'INPUT') {
-    calendar.dateField.value = calendar.date.print(calendar.dateFormat) }
+  if (calendar.dateField.tagName == 'INPUT')
+    calendar.dateField.value = calendar.date.print(calendar.dateFormat)
+  else
+  	Element.update(calendar.dateField, calendar.date.print(calendar.dateFormat))
 
   // Trigger the onchange callback on the dateField, if one has been defined
   if (typeof calendar.dateField.onchange == 'function')

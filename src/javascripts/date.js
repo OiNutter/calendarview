@@ -1,4 +1,4 @@
-//==============================================================================
+ //==============================================================================
 //
 // Date Object Patches
 //
@@ -154,6 +154,24 @@ Date.prototype.setDateOnly = function(date) {
   this.setDate(tmp.getDate());
 };
 
+/** Returns ordinal suffix for day **/
+Date.prototype.getOrdinalSuffix = function(){
+	var day = this.getDate(),
+		ending = day % 10;
+		
+	if(day ==11 || day == 12)
+		return 'th';
+	else if(ending==1)
+		return 'st';
+	else if(ending==2)
+		return 'nd';
+	else if(ending==3)
+		return 'rd';
+	else
+		return 'th';
+		
+}
+
 /** Prints the date in a string according to the given format. */
 Date.prototype.print = function (str) {
   var m = this.getMonth();
@@ -177,6 +195,7 @@ Date.prototype.print = function (str) {
   // FIXME: %c : preferred date and time representation for the current locale
   s["%C"] = 1 + Math.floor(y / 100); // the century number
   s["%d"] = (d < 10) ? ("0" + d) : d; // the day of the month (range 01 to 31)
+  s["%D"] = this.getOrdinalSuffix() // the ordinal suffix eg st, nd, rd or th
   s["%e"] = d; // the day of the month (range 1 to 31)
   // FIXME: %D : american date style: %m/%d/%y
   // FIXME: %E, %F, %G, %g, %h (man strftime)
@@ -204,6 +223,7 @@ Date.prototype.print = function (str) {
   s["%y"] = ('' + y).substr(2, 2); // year without the century (range 00 to 99)
   s["%Y"] = y;    // year with the century
   s["%%"] = "%";    // a literal '%' character
+  
 
   return str.gsub(/%./, function(match) { return s[match] || match });
 };

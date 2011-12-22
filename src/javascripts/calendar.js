@@ -347,7 +347,6 @@ Calendar.prototype = {
             //Add events
             if(planner){
             	events = planner.getEventsForDate(date.print('%Y-%m-%d'))
-            	console.log(events)
             	if(events.length>0){
             		wrapper = new Element('span').addClassName('events-summary');
             		cell.appendChild(wrapper)

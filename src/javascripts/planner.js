@@ -14,7 +14,6 @@ Calendar.Planner.setup = function(events,options){
 	for(i = 0; i < events.length; i++)
 		planner.addEvent(events[i])
 	
-	console.log(planner.events)
 	return planner
 }
 
@@ -42,7 +41,7 @@ Calendar.Planner.prototype = {
 							
 			var label,
 				i;
-			console.log(container)
+			
 			if(this.getEventsForDate(date.print('%Y-%m-%d')).length>this.options.maxEvents){
 				label = new Element('span').update(this.parse(this.options.countFormat,{count:events.length}))
 				container.appendChild(label)

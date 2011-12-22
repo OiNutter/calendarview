@@ -27,11 +27,22 @@ Calendar.Planner.prototype = {
 			},options);
 		},
 		addEvent: function(event){
-			var date = new Date(event.date)
-			if(!this.events[date.print('%Y-%m-%d')])
-				this.events[date.print('%Y-%m-%d')] = []
+			var startDate = new Date(event.startDate),
+				endDate = new Date(event.endDate),
+				limit = new Date(endDate.getFullYear(),endDate.getMonth(),endDate.getDate(),23,59,59)
 			
-			this.events[date.print('%Y-%m-%d')].push(event)
+			if(startDate.getDate() == endDate.getDate())
+				this.storeEvent(event,startDate)
+			else
+				for(i = startDate.getTime();i<=limit.getTime();i+=86400000)
+					this.storeEvent(event,new Date(i))			
+			
+		},
+		storeEvent: function(event,eventDate){
+			if(!this.events[eventDate.print('%Y-%m-%d')])
+				this.events[eventDate.print('%Y-%m-%d')] = []
+			
+			this.events[eventDate.print('%Y-%m-%d')].push(event)
 		},
 		getEventsForDate: function(date){
 			return this.events[date] || []
